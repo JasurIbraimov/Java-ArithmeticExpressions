@@ -8,6 +8,14 @@ public class Expressions {
         return new Variable(name, value);
     }
 
+    private static String joinExpressions(String sign, Expression... expressions) {
+        StringJoiner stringJoiner = new StringJoiner(" " + sign + " ", "(", ")");
+        for(Expression expression : expressions) {
+            stringJoiner.add(expression.toExpressionString());
+        }
+        return stringJoiner.toString();
+    }
+
     public static Expression val(int value) {
         return new Expression() {
             @Override
@@ -35,11 +43,7 @@ public class Expressions {
 
             @Override
             public String toExpressionString() {
-                StringJoiner stringJoiner = new StringJoiner(" + ");
-                for(Expression expression : members) {
-                    stringJoiner.add(expression.toExpressionString());
-                }
-                return "(" + stringJoiner + ")";
+                return joinExpressions("+", members);
             }
         };
     }
@@ -57,11 +61,7 @@ public class Expressions {
 
             @Override
             public String toExpressionString() {
-                StringJoiner stringJoiner = new StringJoiner(" * ");
-                for(Expression expression : members) {
-                    stringJoiner.add(expression.toExpressionString());
-                }
-                return "(" +  stringJoiner + ")";
+                return joinExpressions("*", members);
             }
         };
     }
@@ -75,7 +75,7 @@ public class Expressions {
 
             @Override
             public String toExpressionString() {
-                return "(" + minuend.toExpressionString() + " - " + subtrahend.toExpressionString() + ")";
+                return joinExpressions("-", minuend, subtrahend);
             }
         };
     }
@@ -89,7 +89,7 @@ public class Expressions {
 
             @Override
             public String toExpressionString() {
-                return "(" + dividend.toExpressionString() + " / " + divisor.toExpressionString() + ")";
+                return joinExpressions("/", dividend, divisor);
             }
         };
     }
